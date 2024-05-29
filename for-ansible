@@ -1,0 +1,13 @@
+FROM ubuntu:22.04
+
+RUN apt update && apt install -y openssh-server && apt install nano
+RUN sed -i 's/#PermitRootLogin prohibit-password/PermitRootLogin yes/' /etc/ssh/sshd_config 
+# Протестировано только с образом ubuntu:22.04
+
+RUN echo "root:ansible-education" | chpasswd
+RUN useradd -m -s /bin/bash ansible
+RUN echo "ansible:ansible" | chpasswd
+
+EXPOSE 22
+
+ENTRYPOINT service ssh start && bash
